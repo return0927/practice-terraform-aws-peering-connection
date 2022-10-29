@@ -1,7 +1,5 @@
 provider "aws" {
   alias = "seoul"
-  access_key = "AKIAYTIRB5LWYZJ4TC65"
-  secret_key = "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"
   region = "ap-northeast-2"
 }
 
