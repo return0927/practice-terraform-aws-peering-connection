@@ -53,23 +53,16 @@ resource "aws_security_group" "seoul-sg-public" {
     }
 }
 
-resource "aws_network_interface" "seoul-private-ni" {
-    provider = aws.seoul
-
-    subnet_id = aws_subnet.seoul-private-subnet.id
-    
-    attachment {
-      instance = aws_instance.seoul-instance.id
-      device_index = 1
-    }
-}
-
 output "seoul-instance-public-dns" {
   value = aws_instance.seoul-instance.public_dns
 }
 
 output "seoul-instance-public-ip" {
   value = aws_instance.seoul-instance.public_ip
+}
+
+output "seoul-instance-private-dns" {
+  value = aws_instance.seoul-instance.private_dns
 }
 
 output "seoul-instance-private-ip" {

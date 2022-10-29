@@ -53,23 +53,16 @@ resource "aws_security_group" "singapore-sg-public" {
     }
 }
 
-resource "aws_network_interface" "singapore-private-ni" {
-    provider = aws.singapore
-
-    subnet_id = aws_subnet.singapore-private-subnet.id
-    
-    attachment {
-      instance = aws_instance.singapore-instance.id
-      device_index = 1
-    }
-}
-
 output "singapore-instance-public-dns" {
   value = aws_instance.singapore-instance.public_dns
 }
 
 output "singapore-instance-public-ip" {
   value = aws_instance.singapore-instance.public_ip
+}
+
+output "singapore-instance-private-dns" {
+  value = aws_instance.singapore-instance.private_dns
 }
 
 output "singapore-instance-private-ip" {
