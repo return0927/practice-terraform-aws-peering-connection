@@ -1,5 +1,5 @@
 ##################################################
-#                      VPC                       #
+#                   INSTANCE                     #
 ##################################################
 resource "aws_instance" "seoul-instance" {
     provider = aws.seoul
@@ -7,14 +7,14 @@ resource "aws_instance" "seoul-instance" {
     ami = "ami-0a93a08544874b3b7" # amzn2-ami-hvm-2.0.20200207.1-x86_64-gp2
     instance_type = "t2.medium"
     key_name = aws_key_pair.keypair.key_name
-    subnet_id = aws_subnet.seoul-public-subnet.id
+    subnet_id = aws_subnet.seoul-private-subnet.id
 
     vpc_security_group_ids = [
-        aws_security_group.seoul-sg-public.id
+        aws_security_group.seoul-sg-private.id
     ]
 
     depends_on = [
-      aws_internet_gateway.seoul-igw
+      aws_subnet.seoul-private-subnet
     ]
 
     tags = {
@@ -51,6 +51,29 @@ resource "aws_security_group" "seoul-sg-public" {
         protocol = "-1"
         to_port = 0
     }
+}
+
+resource "aws_security_group" "seoul-sg-private" {
+  provider = aws.seoul
+
+  name = "enak-ix-seoul-sg-private"
+  vpc_id = aws_vpc.seoul-vpc.id
+
+  ingress {
+    cidr_blocks = [ "10.0.0.0/16" ]
+    description = "All traffics from private subnet"
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+  }
+
+  egress {
+    cidr_blocks = [ "0.0.0.0/0" ]
+    description = "outbound"
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+  }
 }
 
 output "seoul-instance-public-dns" {

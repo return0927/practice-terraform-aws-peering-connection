@@ -51,7 +51,7 @@ resource "aws_vpc_peering_connection_options" "enak-ix-peering-singapore-opt" {
 
 resource "aws_route" "seoul-ix-rt" {
     provider = aws.seoul
-    route_table_id = aws_route_table.seoul-public-rt.id
+    route_table_id = aws_route_table.seoul-private-rt.id
     destination_cidr_block = "20.0.0.0/16"
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
 
@@ -62,7 +62,7 @@ resource "aws_route" "seoul-ix-rt" {
 
 resource "aws_route" "singapore-ix-rt" {
     provider = aws.singapore
-    route_table_id = aws_route_table.singapore-public-rt.id
+    route_table_id = aws_route_table.singapore-private-rt.id
     destination_cidr_block = "10.0.0.0/16"
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
 

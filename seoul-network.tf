@@ -53,3 +53,29 @@ resource "aws_route_table_association" "seoul-public-rt-ass" {
     subnet_id = aws_subnet.seoul-public-subnet.id
     route_table_id = aws_route_table.seoul-public-rt.id
 }
+
+## Private Subnet
+resource "aws_subnet" "seoul-private-subnet" {
+    provider = aws.seoul
+
+    vpc_id = aws_vpc.seoul-vpc.id
+    cidr_block = "10.0.1.0/24"
+    availability_zone = "ap-northeast-2a"
+    
+    tags = { Name = "enak-ix-seoul-private-subnet" }
+}
+
+resource "aws_route_table" "seoul-private-rt" {
+    provider = aws.seoul
+
+    vpc_id = aws_vpc.seoul-vpc.id
+
+    tags = { Name = "enak-ix-seoul-private-rt" }
+}
+
+resource "aws_route_table_association" "seoul-private-rt-ass" {
+    provider = aws.seoul
+
+    subnet_id = aws_subnet.seoul-private-subnet.id
+    route_table_id = aws_route_table.seoul-private-rt.id
+}

@@ -1,5 +1,5 @@
 ##################################################
-#                      VPC                       #
+#                   INSTANCE                     #
 ##################################################
 resource "aws_instance" "singapore-instance" {
     provider = aws.singapore
@@ -7,41 +7,33 @@ resource "aws_instance" "singapore-instance" {
     ami = "ami-094bbd9e922dc515d" # amzn2-ami-hvm-2.0.20200207.1-x86_64-gp2
     instance_type = "t2.medium"
     key_name = aws_key_pair.keypair.key_name
-    subnet_id = aws_subnet.singapore-public-subnet.id
+    subnet_id = aws_subnet.singapore-private-subnet.id
 
     vpc_security_group_ids = [
-        aws_security_group.singapore-sg-public.id
+        aws_security_group.singapore-sg-private.id
     ]
 
-    depends_on = [
+    /* depends_on = [
       aws_internet_gateway.singapore-igw
-    ]
+    ] */
 
     tags = {
         Name = "enak-ix-singapore-instance"
     }
 }
 
-resource "aws_security_group" "singapore-sg-public" {
+resource "aws_security_group" "singapore-sg-private" {
     provider = aws.singapore
 
-    name = "enak-ix-singapore-sg-public"
+    name = "enak-ix-singapore-sg-private"
     vpc_id = aws_vpc.singapore-vpc.id
 
     ingress {
         cidr_blocks = [ "0.0.0.0/0" ]
-        description = "SSH"
-        from_port = 22
-        protocol = "tcp"
-        to_port = 22
-    }
-
-    ingress {
-        cidr_blocks = [ "10.0.0.0/16" ]
-        description = "All traffics from Seoul IX"
+        description = "inbound"
         from_port = 0
-        to_port = 0
         protocol = "-1"
+        to_port = 0
     }
 
     egress {
