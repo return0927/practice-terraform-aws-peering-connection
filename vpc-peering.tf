@@ -1,12 +1,16 @@
-resource "aws_vpc_peering_connection" "enak-ix-peering" {
-    provider = aws.seoul
+data "aws_region" "peering-region" {
+  provider = aws.remote
+}
 
-    peer_owner_id = aws_vpc.singapore-vpc.owner_id
-    peer_vpc_id = aws_vpc.singapore-vpc.id
-    peer_region = "ap-southeast-1"
+resource "aws_vpc_peering_connection" "enak-ix-peering" {
+    provider = aws.near
+
+    peer_owner_id = aws_vpc.remote-vpc.owner_id
+    peer_vpc_id = aws_vpc.remote-vpc.id
+    peer_region = data.aws_region.peering-region
     # auto_accept = true
 
-    vpc_id = aws_vpc.seoul-vpc.id
+    vpc_id = aws_vpc.near-vpc.id
 
     tags = {
         Name = "enak-ix-peering"
@@ -14,7 +18,7 @@ resource "aws_vpc_peering_connection" "enak-ix-peering" {
 }
 
 resource "aws_vpc_peering_connection_accepter" "enak-ix-peering-acc" {
-    provider = aws.singapore
+    provider = aws.remote
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
     auto_accept = true
 
@@ -23,8 +27,8 @@ resource "aws_vpc_peering_connection_accepter" "enak-ix-peering-acc" {
     ]
 }
 
-resource "aws_vpc_peering_connection_options" "enak-ix-peering-seoul-opt" {
-    provider = aws.seoul
+resource "aws_vpc_peering_connection_options" "enak-ix-peering-near-opt" {
+    provider = aws.near
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
     
     requester {
@@ -36,8 +40,8 @@ resource "aws_vpc_peering_connection_options" "enak-ix-peering-seoul-opt" {
     ]
 }
 
-resource "aws_vpc_peering_connection_options" "enak-ix-peering-singapore-opt" {
-    provider = aws.singapore
+resource "aws_vpc_peering_connection_options" "enak-ix-peering-remote-opt" {
+    provider = aws.remote
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
     
     accepter {
@@ -49,9 +53,9 @@ resource "aws_vpc_peering_connection_options" "enak-ix-peering-singapore-opt" {
     ]
 }
 
-resource "aws_route" "seoul-ix-rt" {
-    provider = aws.seoul
-    route_table_id = aws_route_table.seoul-private-rt.id
+resource "aws_route" "near-ix-rt" {
+    provider = aws.near
+    route_table_id = aws_route_table.near-private-rt.id
     destination_cidr_block = "20.0.0.0/16"
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
 
@@ -60,9 +64,9 @@ resource "aws_route" "seoul-ix-rt" {
     ]
 }
 
-resource "aws_route" "singapore-ix-rt" {
-    provider = aws.singapore
-    route_table_id = aws_route_table.singapore-private-rt.id
+resource "aws_route" "remote-ix-rt" {
+    provider = aws.remote
+    route_table_id = aws_route_table.remote-private-rt.id
     destination_cidr_block = "10.0.0.0/16"
     vpc_peering_connection_id = aws_vpc_peering_connection.enak-ix-peering.id
 

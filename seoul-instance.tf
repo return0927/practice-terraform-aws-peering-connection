@@ -1,32 +1,32 @@
 ##################################################
 #                   INSTANCE                     #
 ##################################################
-resource "aws_instance" "seoul-instance" {
-    provider = aws.seoul
+resource "aws_instance" "near-instance" {
+    provider = aws.near
 
     ami = "ami-0a93a08544874b3b7" # amzn2-ami-hvm-2.0.20200207.1-x86_64-gp2
     instance_type = "t2.medium"
     key_name = aws_key_pair.keypair.key_name
-    subnet_id = aws_subnet.seoul-private-subnet.id
+    subnet_id = aws_subnet.near-private-subnet.id
 
     vpc_security_group_ids = [
-        aws_security_group.seoul-sg-private.id
+        aws_security_group.near-sg-private.id
     ]
 
     depends_on = [
-      aws_subnet.seoul-private-subnet
+      aws_subnet.near-private-subnet
     ]
 
     tags = {
-        Name = "enak-ix-seoul-instance"
+        Name = "enak-ix-near-instance"
     }
 }
 
-resource "aws_security_group" "seoul-sg-public" {
-    provider = aws.seoul
+resource "aws_security_group" "near-sg-public" {
+    provider = aws.near
 
-    name = "enak-ix-seoul-sg-public"
-    vpc_id = aws_vpc.seoul-vpc.id
+    name = "enak-ix-near-sg-public"
+    vpc_id = aws_vpc.near-vpc.id
 
     ingress {
         cidr_blocks = [ "0.0.0.0/0" ]
@@ -53,11 +53,11 @@ resource "aws_security_group" "seoul-sg-public" {
     }
 }
 
-resource "aws_security_group" "seoul-sg-private" {
-  provider = aws.seoul
+resource "aws_security_group" "near-sg-private" {
+  provider = aws.near
 
-  name = "enak-ix-seoul-sg-private"
-  vpc_id = aws_vpc.seoul-vpc.id
+  name = "enak-ix-near-sg-private"
+  vpc_id = aws_vpc.near-vpc.id
 
   ingress {
     cidr_blocks = [ "10.0.0.0/16" ]
@@ -76,18 +76,18 @@ resource "aws_security_group" "seoul-sg-private" {
   }
 }
 
-output "seoul-instance-public-dns" {
-  value = aws_instance.seoul-instance.public_dns
+output "near-instance-public-dns" {
+  value = aws_instance.near-instance.public_dns
 }
 
-output "seoul-instance-public-ip" {
-  value = aws_instance.seoul-instance.public_ip
+output "near-instance-public-ip" {
+  value = aws_instance.near-instance.public_ip
 }
 
-output "seoul-instance-private-dns" {
-  value = aws_instance.seoul-instance.private_dns
+output "near-instance-private-dns" {
+  value = aws_instance.near-instance.private_dns
 }
 
-output "seoul-instance-private-ip" {
-  value = aws_instance.seoul-instance.private_ip
+output "near-instance-private-ip" {
+  value = aws_instance.near-instance.private_ip
 }
