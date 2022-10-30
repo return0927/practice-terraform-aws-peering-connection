@@ -7,7 +7,7 @@ resource "aws_vpc_peering_connection" "enak-ix-peering" {
 
     peer_owner_id = aws_vpc.remote-vpc.owner_id
     peer_vpc_id = aws_vpc.remote-vpc.id
-    peer_region = data.aws_region.peering-region
+    peer_region = data.aws_region.peering-region.name
     # auto_accept = true
 
     vpc_id = aws_vpc.near-vpc.id

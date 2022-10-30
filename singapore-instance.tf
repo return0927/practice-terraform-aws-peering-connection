@@ -4,9 +4,9 @@
 resource "aws_instance" "remote-instance" {
     provider = aws.remote
 
-    ami = "ami-094bbd9e922dc515d" # amzn2-ami-hvm-2.0.20200207.1-x86_64-gp2
+    ami = "ami-0091142fcd273792c" # amzn2-ami-hvm-2.0.20200207.1-x86_64-gp2
     instance_type = "t2.medium"
-    key_name = aws_key_pair.keypair.key_name
+    key_name = aws_key_pair.remote-keypair.key_name
     subnet_id = aws_subnet.remote-private-subnet.id
 
     vpc_security_group_ids = [

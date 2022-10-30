@@ -6,7 +6,7 @@ resource "aws_instance" "near-instance" {
 
     ami = "ami-0a93a08544874b3b7" # amzn2-ami-hvm-2.0.20200207.1-x86_64-gp2
     instance_type = "t2.medium"
-    key_name = aws_key_pair.keypair.key_name
+    key_name = aws_key_pair.near-keypair.key_name
     subnet_id = aws_subnet.near-private-subnet.id
 
     vpc_security_group_ids = [
@@ -34,6 +34,22 @@ resource "aws_security_group" "near-sg-public" {
         from_port = 22
         protocol = "tcp"
         to_port = 22
+    }
+
+    ingress {
+        cidr_blocks = [ "0.0.0.0/0" ]
+        description = "Web"
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+    }
+
+    ingress {
+        cidr_blocks = [ "0.0.0.0/0" ]
+        description = "Squid Proxy"
+        from_port = 1080
+        to_port = 1080
+        protocol = "tcp"
     }
 
     ingress {
